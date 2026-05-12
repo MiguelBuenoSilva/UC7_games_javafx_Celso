@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.UTFDataFormatException;
 import java.nio.channels.IllegalBlockingModeException;
+import java.time.LocalDate;
 
 public class TelaJogo {
 
@@ -40,8 +41,9 @@ public class TelaJogo {
 
         raiz.setTop(criarPainelTitulo());
         raiz.setCenter(criarFormulario());
+        raiz.setBottom(criarPainelBotoes());
 
-        Scene cena = new Scene(raiz, 500, 400);
+        Scene cena = new Scene(raiz, 500, 500);
 
         stage.setScene(cena);
         stage.setResizable(false);
@@ -73,11 +75,19 @@ public class TelaJogo {
 
         ObservableList<String> plataformas = FXCollections.observableArrayList(
                 "Super Nintendo", "Mega Drive", "PC", "PlayStation 1", "XBox-360"
+        ); // Hardcoded
+
+        ObservableList<String> estudios = FXCollections.observableArrayList(
+                "Konami", "Capcom", "Rare", "Nintendo", "Sega", "UbiSoft"
         );
 
         VBox formulario = new VBox();
+        formulario.setPadding(new Insets(50));
 
-        GridPane gridFormulario = new GridPane();
+        GridPane gridFormulario = new GridPane(6, 6);
+        gridFormulario.setGridLinesVisible(false);
+        gridFormulario.setPadding(new Insets(30));
+        gridFormulario.setStyle("-fx-border-width: 2; -fx-border-color: #1b3f4c; -fx-border-radius: 8");
 
         // Criar os componentes que serão inseridos no grid
         Label lblId = new Label("ID:");
@@ -91,6 +101,18 @@ public class TelaJogo {
         Label lblPlataforma = new Label("Plataforma:");
         comboPlataforma = new ComboBox<>(plataformas);
 
+        Label lblEstudio =  new Label("Estúdio:");
+        comboEstudio = new ComboBox<>(estudios);
+
+        Label lblValor = new Label("Valor:");
+        tfValor = new TextField();
+        tfValor.setPromptText("Ex. 9,99");
+
+        Label lblDataLancamento = new Label("Data lançamento:");
+        dpDataLancamento = new DatePicker(LocalDate.of(2006, 9, 14));
+
+        cbFinalizado = new CheckBox("Finalizado");
+
         // Adicionar os componentes no Grid
         gridFormulario.add(lblId, 0, 0);
         gridFormulario.add(tfId, 1, 0);
@@ -98,10 +120,29 @@ public class TelaJogo {
         gridFormulario.add(tfTitulo, 1, 1);
         gridFormulario.add(lblPlataforma, 0, 2);
         gridFormulario.add(comboPlataforma, 1, 2);
+        gridFormulario.add(lblEstudio, 0, 3);
+        gridFormulario.add(comboEstudio, 1, 3);
+        gridFormulario.add(lblValor, 0, 4);
+        gridFormulario.add(tfValor, 1, 4);
+        gridFormulario.add(lblDataLancamento, 0, 5);
+        gridFormulario.add(dpDataLancamento, 1, 5);
+        gridFormulario.add(cbFinalizado, 1, 6);
+
 
         formulario.getChildren().add(gridFormulario);
 
         return formulario;
+    }
+
+    private HBox criarPainelBotoes(){
+        HBox painelBotoes = new HBox();
+
+        Button btnSalvar = new Button("Salvar");
+        Button btnCancelar = new Button("Cancelar");
+
+        painelBotoes.getChildren().addAll(btnSalvar, btnCancelar);
+
+        return painelBotoes;
     }
 
 }
