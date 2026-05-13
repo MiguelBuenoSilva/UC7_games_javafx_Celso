@@ -135,10 +135,21 @@ public class TelaJogo {
     }
 
     private HBox criarPainelBotoes(){
-        HBox painelBotoes = new HBox();
+        HBox painelBotoes = new HBox(20);
+        painelBotoes.setStyle("-fx-background-color: #69cfcf");
+        painelBotoes.setPadding(new Insets(10));
+        painelBotoes.setAlignment(Pos.CENTER_RIGHT);
 
-        Button btnSalvar = new Button("Salvar");
-        Button btnCancelar = new Button("Cancelar");
+        Button btnSalvar = new Button();
+        Image imgSalvar = new Image(getClass().getResourceAsStream("/imagens/save32.png"));
+        ImageView ivSalvar = new ImageView(imgSalvar);
+        btnSalvar.setGraphic(ivSalvar);
+        btnSalvar.setTooltip(new Tooltip("Salvar dados do jogo"));
+
+        Button btnCancelar = new Button();
+        Image imgCancelar =  new Image(getClass().getResourceAsStream("/imagens/cancel32.png"));
+        ImageView ivCancelar = new ImageView(imgCancelar);
+        btnCancelar.setGraphic(ivCancelar);
 
         painelBotoes.getChildren().addAll(btnSalvar, btnCancelar);
 
