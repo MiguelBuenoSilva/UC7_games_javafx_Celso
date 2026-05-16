@@ -6,7 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 // Mock -> Fonte dados falso
 
@@ -14,15 +16,45 @@ public class JogoRepository {
 
     public ObservableList<Jogo> getJogos() {
 
-        ObservableList<Jogo> listaJogos = FXCollections
-                .observableArrayList(
-                        new Jogo(1, "nome do jogo", "snes"),
-                        new Jogo(2, "nome do jogo", "snes"),
-                        new Jogo(3, "nome do jogo", "snes"),
-                        new Jogo(4, "nome do jogo", "snes")
-                );
+        String sql = "SELECT * FROM tb_games";
 
-        return listaJogos;
+        ObservableList<Jogo> listaJogos = FXCollections.observableArrayList();
+
+        try {
+            PreparedStatement stm = ConexaoSQLite.getConexao().prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()){
+                Jogo jogo = new Jogo();
+                int id = rs.getInt("id");
+                String titulo = rs.getString("titulo");
+                String categoria = rs.getString("categoria");
+                String plataforma = rs.getString("plataforma");
+                String estudio = rs.getString("estudio");
+                double preco = rs.getDouble("preco");
+                LocalDate dataLancamento = LocalDate.parse(rs.getString("data_lancamento"));
+                boolean isFinalizado = rs.getInt("finalizado") == 1 ? true : false;
+
+                // Popular o objeto jogo com os dados
+                jogo.setId(id);
+                jogo.setTitulo(titulo);
+                jogo.setPlataforma(plataforma);
+                jogo.setCategoria(categoria);
+                jogo.setPreco(preco);
+                jogo.setFinalizado(isFinalizado);
+                jogo.setEstudio(estudio);
+                jogo.setDataLancamento(dataLancamento);
+
+                listaJogos.add(jogo);
+            }
+
+            return listaJogos;
+
+        } catch (SQLException e) {
+            System.out.println("Ocorreu um erro na leitura dos dados.");
+            e.printStackTrace();
+            return null;
+        }
 
     }
 

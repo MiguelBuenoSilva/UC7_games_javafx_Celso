@@ -74,6 +74,7 @@ public class PainelJogos {
         btnAdicionar.setOnAction(e ->{
             TelaJogo telaJogo = new TelaJogo();
             telaJogo.criarTela(stage);
+            tabelaJogos.setItems(repository.getJogos());
         });
 
         Button btnEditar = criarBotao("Editar", "/imagens/edit16.png");

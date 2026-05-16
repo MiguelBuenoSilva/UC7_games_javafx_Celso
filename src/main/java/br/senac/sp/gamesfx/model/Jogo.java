@@ -13,18 +13,15 @@ public class Jogo {
     private LocalDate dataLancamento;
     private boolean finalizado;
 
-//    public Jogo(int id, String titulo, String plataforma){
-//        this.id = id;
-//        this.titulo = titulo;
-//        this.plataforma = plataforma;
-//    }
-
 
     public Jogo(int id, String titulo, String plataforma) {
         this.id = id;
         this.titulo = titulo;
         this.plataforma = plataforma;
     }
+
+    // Construtor Default/Padrão
+    public Jogo(){}
 
     public int getId() {
         return id;
