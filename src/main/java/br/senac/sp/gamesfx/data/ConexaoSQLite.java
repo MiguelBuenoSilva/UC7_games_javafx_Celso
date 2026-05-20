@@ -6,13 +6,15 @@ import java.sql.SQLException;
 
 public class ConexaoSQLite {
 
+    private static Connection conexao;
+
     public static Connection getConexao(){
 
         // String de conexão - URL do banco de dados
         String url = "jdbc:sqlite:/C:/Users/celso.mfurtado/banco_de_dados/db_games.db";
 
         try {
-            Connection conexao = DriverManager.getConnection(url);
+            conexao = DriverManager.getConnection(url);
             System.out.println("Conexão SUCELSO!!!");
             return conexao;
         } catch (SQLException erro) {
@@ -20,7 +22,16 @@ public class ConexaoSQLite {
             erro.printStackTrace();
             return null;
         }
+    }
 
+    public static void fecharConexao(){
+        try {
+            if (!conexao.isClosed()) {
+                conexao.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

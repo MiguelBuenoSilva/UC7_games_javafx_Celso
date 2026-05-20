@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.UTFDataFormatException;
 import java.nio.channels.IllegalBlockingModeException;
 import java.time.LocalDate;
@@ -43,7 +44,7 @@ public class TelaJogo {
 
         raiz.setTop(criarPainelTitulo());
         raiz.setCenter(criarFormulario());
-        raiz.setBottom(criarPainelBotoes());
+        raiz.setBottom(criarPainelBotoes(stage));
 
         Scene cena = new Scene(raiz, 500, 500);
 
@@ -95,6 +96,7 @@ public class TelaJogo {
         Label lblId = new Label("ID:");
         tfId = new TextField();
         tfId.setEditable(false);
+        tfId.setDisable(true);
 
         Label lblTitulo = new Label("Título:");
         tfTitulo = new TextField();
@@ -136,7 +138,7 @@ public class TelaJogo {
         return formulario;
     }
 
-    private HBox criarPainelBotoes(){
+    private HBox criarPainelBotoes(Stage stage){
         HBox painelBotoes = new HBox(20);
         painelBotoes.setStyle("-fx-background-color: #69cfcf");
         painelBotoes.setPadding(new Insets(10));
@@ -161,6 +163,27 @@ public class TelaJogo {
             // Criar o repositório para enviar o jogo
             JogoRepository repository = new JogoRepository();
             repository.salvar(jogo);
+
+//            JOptionPane.showMessageDialog(
+//                    null,
+//                    "Jogo cadastrado com sucesso!",
+//                    "Erro!",
+//                    JOptionPane.ERROR_MESSAGE
+//            );
+
+            int resposta = JOptionPane.showConfirmDialog(
+                    null,
+                    "Jogo cadastrado com sucesso!\nDeseja cadastrar outro jogo?",
+                    "Cadastro",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (resposta != 0){
+                stage.close();
+            }
+
+            limparCampos();
+
         });
 
         Button btnCancelar = new Button();
@@ -172,5 +195,19 @@ public class TelaJogo {
 
         return painelBotoes;
     }
+
+    private void limparCampos() {
+
+        tfTitulo.clear();
+        tfId.clear();
+        tfValor.clear();
+        comboEstudio.setValue("");
+        comboPlataforma.setValue("");
+        cbFinalizado.setSelected(false);
+        dpDataLancamento.setValue(LocalDate.now());
+        tfTitulo.requestFocus();
+
+    }
+
 
 }

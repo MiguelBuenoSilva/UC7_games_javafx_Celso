@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+
 public class PainelJogos {
 
     private Stage stage;
@@ -79,7 +81,18 @@ public class PainelJogos {
 
         Button btnEditar = criarBotao("Editar", "/imagens/edit16.png");
         Button btnExibir = criarBotao("Exibir", "/imagens/visual16.png");
+
         Button btnExcluir = criarBotao("Excluir", "/imagens/delete16.png");
+        btnExcluir.setOnAction(e -> {
+            Jogo jogoExcluir = tabelaJogos.getSelectionModel().getSelectedItem();
+            int resultado = repository.excluir(jogoExcluir.getId());
+
+            if (resultado > 0){
+                JOptionPane.showMessageDialog(null, "Jogo excluído com sucesso!");
+                tabelaJogos.setItems(repository.getJogos());
+            }
+
+        });
 
         painelBotoes.getChildren().addAll(btnAdicionar, btnEditar, btnExibir, btnExcluir);
 
