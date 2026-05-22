@@ -15,6 +15,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.util.Optional;
 
 public class PainelJogos {
 
@@ -80,17 +81,45 @@ public class PainelJogos {
         });
 
         Button btnEditar = criarBotao("Editar", "/imagens/edit16.png");
+        btnEditar.setOnAction(e -> {
+            // Recuperar o jogo que eu quero editar
+            Jogo jogoEditar = tabelaJogos.getSelectionModel().getSelectedItem();
+            TelaJogo telaJogo = new TelaJogo(jogoEditar);
+            telaJogo.criarTela(stage);
+        });
+
         Button btnExibir = criarBotao("Exibir", "/imagens/visual16.png");
 
         Button btnExcluir = criarBotao("Excluir", "/imagens/delete16.png");
         btnExcluir.setOnAction(e -> {
-            Jogo jogoExcluir = tabelaJogos.getSelectionModel().getSelectedItem();
-            int resultado = repository.excluir(jogoExcluir.getId());
 
-            if (resultado > 0){
-                JOptionPane.showMessageDialog(null, "Jogo excluído com sucesso!");
+            Jogo jogoExcluir = tabelaJogos.getSelectionModel().getSelectedItem();
+
+            if (jogoExcluir == null){
+                Alert alertaJogoNaoSelecionado = new Alert(Alert.AlertType.WARNING);
+                alertaJogoNaoSelecionado.setTitle("Exclusão de jogo");
+                alertaJogoNaoSelecionado.setHeaderText("Para excluir um jogo, você deve selecioná-lo na lista.");
+                alertaJogoNaoSelecionado.showAndWait();
+                return;
+            }
+
+            Alert confirmaExclusao = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmaExclusao.setTitle("Exclusão de jogo");
+            confirmaExclusao.setHeaderText("Você está prestes a excluir um jogo.");
+            confirmaExclusao.setContentText("Tem certeza que deseja continuar?");
+
+            Optional<ButtonType> resposta = confirmaExclusao.showAndWait();
+            ButtonType botaoSelecionado = resposta.get();
+
+            if (botaoSelecionado == ButtonType.OK){
+                repository.excluir(jogoExcluir.getId());
                 tabelaJogos.setItems(repository.getJogos());
             }
+
+//            if (resultado > 0){
+//                JOptionPane.showMessageDialog(null, "Jogo excluído com sucesso!");
+//                tabelaJogos.setItems(repository.getJogos());
+//            }
 
         });
 

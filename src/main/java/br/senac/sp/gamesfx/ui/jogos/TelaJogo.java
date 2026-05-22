@@ -18,19 +18,29 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.io.UTFDataFormatException;
-import java.nio.channels.IllegalBlockingModeException;
 import java.time.LocalDate;
 
 public class TelaJogo {
 
-    private TextField tfId;
-    private TextField tfTitulo;
-    private TextField tfValor;
-    private ComboBox<String> comboPlataforma;
-    private ComboBox<String> comboEstudio;
-    private DatePicker dpDataLancamento;
-    private CheckBox cbFinalizado;
+    private TextField tfId = new TextField();
+    private TextField tfTitulo = new TextField();
+    private TextField tfValor = new TextField();
+    private ComboBox<String> comboPlataforma = new ComboBox<>();
+    private ComboBox<String> comboEstudio = new ComboBox<>();
+    private DatePicker dpDataLancamento = new DatePicker();
+    private CheckBox cbFinalizado = new CheckBox("Finalizado");
+
+    public TelaJogo(Jogo jogo){
+        tfId.setText(String.valueOf(jogo.getId()));
+        tfTitulo.setText(jogo.getTitulo());
+        tfValor.setText(String.valueOf(jogo.getPreco()));
+        comboPlataforma.setValue(jogo.getPlataforma());
+        comboEstudio.setValue(jogo.getEstudio());
+        dpDataLancamento.setValue(jogo.getDataLancamento());
+        cbFinalizado.setSelected(jogo.isFinalizado());
+    }
+
+    public TelaJogo(){}
 
     public void criarTela(Stage stagePai){
 
@@ -94,28 +104,23 @@ public class TelaJogo {
 
         // Criar os componentes que serão inseridos no grid
         Label lblId = new Label("ID:");
-        tfId = new TextField();
         tfId.setEditable(false);
         tfId.setDisable(true);
 
         Label lblTitulo = new Label("Título:");
-        tfTitulo = new TextField();
         tfTitulo.setPromptText("Ex. Super Mario World");
 
         Label lblPlataforma = new Label("Plataforma:");
-        comboPlataforma = new ComboBox<>(plataformas);
+        comboPlataforma.setItems(plataformas);
 
         Label lblEstudio =  new Label("Estúdio:");
-        comboEstudio = new ComboBox<>(estudios);
+        comboEstudio.setItems(estudios);
 
         Label lblValor = new Label("Valor:");
-        tfValor = new TextField();
         tfValor.setPromptText("Ex. 9,99");
 
         Label lblDataLancamento = new Label("Data lançamento:");
-        dpDataLancamento = new DatePicker(LocalDate.of(2006, 9, 14));
 
-        cbFinalizado = new CheckBox("Finalizado");
 
         // Adicionar os componentes no Grid
         gridFormulario.add(lblId, 0, 0);
@@ -162,7 +167,13 @@ public class TelaJogo {
 
             // Criar o repositório para enviar o jogo
             JogoRepository repository = new JogoRepository();
-            repository.salvar(jogo);
+
+            if (tfId.getText().equals("")){
+                repository.salvar(jogo);
+            } else {
+                jogo.setId(Integer.parseInt(tfId.getText()));
+                repository.editar(jogo);
+            }
 
 //            JOptionPane.showMessageDialog(
 //                    null,

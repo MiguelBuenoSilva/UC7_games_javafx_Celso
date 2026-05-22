@@ -128,4 +128,32 @@ public class JogoRepository {
 
     }
 
+    public void editar(Jogo jogo) {
+        String sql = "UPDATE tb_games SET " +
+                "titulo = ?," +
+                "plataforma = ?," +
+                "estudio = ?," +
+                "categoria = ?," +
+                "preco = ?," +
+                "data_lancamento = ?," +
+                "finalizado = ? " +
+                "WHERE id = ?;";
+
+        try {
+            PreparedStatement stm = ConexaoSQLite.getConexao().prepareStatement(sql);
+            stm.setString(1, jogo.getTitulo());
+            stm.setString(2, jogo.getPlataforma());
+            stm.setString(3, jogo.getEstudio());
+            stm.setString(4, jogo.getCategoria());
+            stm.setDouble(5, jogo.getPreco());
+            stm.setString(6, jogo.getDataLancamento().toString());
+            stm.setInt(7, jogo.isFinalizado() ? 1 : 0);
+            stm.setInt(8, jogo.getId());
+            stm.executeUpdate();
+            ConexaoSQLite.fecharConexao();
+        } catch (SQLException e) {
+            System.out.println("Ocorreu um erro na gravação.");
+            e.printStackTrace();
+        }
+    }
 }
