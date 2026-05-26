@@ -86,6 +86,7 @@ public class PainelJogos {
             Jogo jogoEditar = tabelaJogos.getSelectionModel().getSelectedItem();
             TelaJogo telaJogo = new TelaJogo(jogoEditar);
             telaJogo.criarTela(stage);
+            tabelaJogos.setItems(repository.getJogos());
         });
 
         Button btnExibir = criarBotao("Exibir", "/imagens/visual16.png");

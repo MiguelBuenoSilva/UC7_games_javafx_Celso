@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class TelaJogo {
 
@@ -137,7 +138,6 @@ public class TelaJogo {
         gridFormulario.add(dpDataLancamento, 1, 5);
         gridFormulario.add(cbFinalizado, 1, 6);
 
-
         formulario.getChildren().add(gridFormulario);
 
         return formulario;
@@ -163,37 +163,52 @@ public class TelaJogo {
             jogo.setDataLancamento(dpDataLancamento.getValue());
             jogo.setCategoria("Jogo");
             jogo.setFinalizado(cbFinalizado.isSelected());
-            jogo.setPreco(Double.parseDouble(tfValor.getText()));
+
+            try{
+                jogo.setPreco(Double.parseDouble(tfValor.getText().replace(",", ".")));
+            } catch (NumberFormatException erro){
+                Alert valorIncorreto = new Alert(Alert.AlertType.ERROR);
+                valorIncorreto.setTitle("Valor incorreto");
+                valorIncorreto.setHeaderText("O valor digitado deve conter apenas números!\nUtilize ponto ou vírgula como separador de decimal.");
+                valorIncorreto.showAndWait();
+                tfValor.requestFocus();
+                return;
+            }
+
 
             // Criar o repositório para enviar o jogo
             JogoRepository repository = new JogoRepository();
 
             if (tfId.getText().equals("")){
                 repository.salvar(jogo);
+
+                // Mostrar a mensagem do pós-salvar
+                Alert mensagemSalvar = new Alert(Alert.AlertType.CONFIRMATION);
+                mensagemSalvar.setTitle("Cadastro de jogo");
+                mensagemSalvar.setHeaderText("O jogo foi gravado com sucesso!");
+                mensagemSalvar.setContentText("Deseja cadastrar outro jogo?");
+
+                Optional<ButtonType> escolha = mensagemSalvar.showAndWait();
+
+                if(escolha.get() == ButtonType.OK) {
+                    limparCampos();
+                } else {
+                    stage.close();
+                }
+
             } else {
                 jogo.setId(Integer.parseInt(tfId.getText()));
                 repository.editar(jogo);
-            }
 
-//            JOptionPane.showMessageDialog(
-//                    null,
-//                    "Jogo cadastrado com sucesso!",
-//                    "Erro!",
-//                    JOptionPane.ERROR_MESSAGE
-//            );
+                // Mostrar a mensagem pós-editar
+                Alert mensagemEditar = new Alert(Alert.AlertType.INFORMATION);
+                mensagemEditar.setTitle("Atualização de jogo");
+                mensagemEditar.setHeaderText("O jogo foi atualizado com sucesso!");
 
-            int resposta = JOptionPane.showConfirmDialog(
-                    null,
-                    "Jogo cadastrado com sucesso!\nDeseja cadastrar outro jogo?",
-                    "Cadastro",
-                    JOptionPane.YES_NO_OPTION
-            );
-
-            if (resposta != 0){
+                mensagemEditar.showAndWait();
                 stage.close();
-            }
 
-            limparCampos();
+            }
 
         });
 
