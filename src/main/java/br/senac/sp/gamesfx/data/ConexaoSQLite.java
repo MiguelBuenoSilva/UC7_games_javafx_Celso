@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexaoSQLite {
-
+//Miguel Passou aqui
     private static Connection conexao;
 
     public static Connection getConexao(){
